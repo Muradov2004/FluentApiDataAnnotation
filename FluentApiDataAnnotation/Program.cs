@@ -1,18 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-
-
-
-class AcademyContext : DbContext
+﻿public class Group
 {
-    public AcademyContext()
-    {
-        Database.EnsureDeleted();
-        Database.EnsureCreated();
-    }
+    public int Id { get; set; }
+    public string GroupName { get; set; }
+    public int Rating { get; set; }
+    public int Year { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlServer("");
-    }
+    public override string ToString() => $"{Id}. {GroupName} - {Rating} - {Year}";
 }
