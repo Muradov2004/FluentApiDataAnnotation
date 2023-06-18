@@ -74,6 +74,17 @@ public class AcademyContext : DbContext
                                         .IsUnique();
         });
 
+        modelBuilder.Entity<Teacher>(entity =>
+        {
+            entity.Property(e => e.Id)
+                                    .ValueGeneratedOnAdd();
+            entity.Property(e => e.Name)
+                                        .IsRequired();
+            entity.ToTable(e => e.HasCheckConstraint("CK_Teachers_Name", "LEN(Name) > 0"));
 
+
+            entity.Property(e => e.Surname)
+                                        .IsRequired();
+        });
     }
 }
