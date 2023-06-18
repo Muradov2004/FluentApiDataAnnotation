@@ -30,61 +30,60 @@ public class AcademyContext : DbContext
 
         modelBuilder.Entity<Group>(entity =>
         {
-            entity.Property(e => e.Id)
-                                    .ValueGeneratedOnAdd();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
             entity.Property(e => e.GroupName)
                                             .HasMaxLength(10)
                                             .IsRequired();
-            entity.HasIndex(e => e.GroupName)
-                                            .IsUnique();
-            entity.Property(e => e.Rating)
-                                        .IsRequired()
-                                        .HasAnnotation("MinValue", 0)
-                                        .HasAnnotation("MaxValue", 5);
-            entity.Property(e => e.Year)
-                                        .IsRequired()
-                                        .HasAnnotation("MinValue", 1)
-                                        .HasAnnotation("MaxValue", 5);
+            entity.HasIndex(e => e.GroupName).IsUnique();
+            entity.ToTable(e => e.HasCheckConstraint("CK_Groups_GroupName", "GroupName != ' '"));
+
+            entity.Property(e => e.Rating).IsRequired();
+            entity.ToTable(e => e.HasCheckConstraint("CK_Groups_Rating", "Rating>=0 AND Rating<=5"));
+
+            entity.Property(e => e.Year).IsRequired();
+            entity.ToTable(e => e.HasCheckConstraint("CK_Groups_Year", "Year>=1 AND Year<=5"));
         });
 
         modelBuilder.Entity<Chair>(entity =>
         {
-            entity.Property(e => e.Id)
-                                    .ValueGeneratedOnAdd();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
             entity.Property(e => e.Name)
                                         .HasMaxLength(100)
                                         .IsRequired();
-            entity.HasIndex(e => e.Name)
-                                        .IsUnique();
+            entity.HasIndex(e => e.Name).IsUnique();
+            entity.ToTable(e => e.HasCheckConstraint("CK_Chairs_Name", "Name != ' '"));
+
             entity.Property(e => e.Financing)
                                         .IsRequired()
                                         .HasColumnType("money")
-                                        .HasAnnotation("MinValue", 0)
                                         .HasDefaultValue(0);
+            entity.ToTable(e => e.HasCheckConstraint("CK_Chairs_Financing", "Financing>=0"));
+
         });
 
         modelBuilder.Entity<Faculty>(entity =>
         {
-            entity.Property(e => e.Id)
-                                    .ValueGeneratedOnAdd();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
             entity.Property(e => e.Name)
                                         .HasMaxLength(100)
                                         .IsRequired();
-            entity.HasIndex(e => e.Name)
-                                        .IsUnique();
+            entity.HasIndex(e => e.Name).IsUnique();
+            entity.ToTable(e => e.HasCheckConstraint("CK_Faculties_Name", "Name != ' '"));
+
         });
 
         modelBuilder.Entity<Teacher>(entity =>
         {
             entity.Property(e => e.Id)
                                     .ValueGeneratedOnAdd();
-            entity.Property(e => e.Name)
-                                        .IsRequired();
-            entity.ToTable(e => e.HasCheckConstraint("CK_Teachers_Name", "LEN(Name) > 0"));
+            entity.Property(e => e.Name).IsRequired();
+            entity.ToTable(e => e.HasCheckConstraint("CK_Teachers_Name", "len(Name) > 0"));
 
 
-            entity.Property(e => e.Surname)
-                                        .IsRequired();
+            entity.Property(e => e.Surname).IsRequired();
         });
     }
 }
