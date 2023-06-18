@@ -84,6 +84,24 @@ public class AcademyContext : DbContext
 
 
             entity.Property(e => e.Surname).IsRequired();
+            entity.ToTable(e => e.HasCheckConstraint("CK_Teachers_Surname", "len(Surname) > 0"));
+
+            entity.Property(e => e.Premium)
+                            .IsRequired()
+                            .HasColumnType("money")
+                            .HasDefaultValue(0);
+            entity.ToTable(e => e.HasCheckConstraint("CK_Teachers_Premium", "Premium>=0"));
+
+            entity.Property(e => e.Salary)
+                                        .IsRequired()
+                                        .HasColumnType("money");
+            entity.ToTable(e => e.HasCheckConstraint("CK_Teachers_Salary", "Salary>=0"));
+
+            entity.Property(e => e.EmploymentDate)
+                                                .IsRequired()
+                                                .HasColumnType("date");
+            entity.ToTable(e => e.HasCheckConstraint("CK_Teachers_EmploymentDate", "EmploymentDate>='1990-01-01'"));
+
         });
     }
 }
